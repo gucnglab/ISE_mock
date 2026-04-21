@@ -24,7 +24,7 @@
 
       <section id="study-content">
         <section class="task-meta">
-          <strong>Task 1 / 3 · Submission 1 / 4</strong>
+          <strong id="task-progress-meta">Task 1 / 1 · Completed Submissions 0 / 1</strong>
           <span> · Participant: </span>
           <span id="participant-id">-</span>
         </section>
@@ -34,48 +34,37 @@
           <blockquote>
             Design a new classroom tool that would help students stay focused without restricting their freedom.
           </blockquote>
-         <p>
-    <strong>On the left panel,</strong> you will work with an AI chatbot. You may send messages to the chatbot by typing and clicking the "Send" button, and you will receive interactive responses. You may interact with it as many or as few times as you like but interacting with the chatbot one or more times is important for our study.
-  </p>
 
-  <p>
-    <strong>On the right panel,</strong> the "Sketchpad" allows you to draft and organize your response (please aim for <strong>300–600 characters</strong>. Your submission will be blocked otherwise). When you're ready, click <strong>"Copy to Submission Box"</strong> to move your response to the submission box, then click <strong>"Submit and Score."</strong>
-  </p>
+          <p>
+            <strong>On the left panel,</strong> you will work with an AI chatbot. You may send messages to the chatbot by typing and clicking the "Send" button, and you will receive interactive responses. You may interact with it as many or as few times as you like but interacting with the chatbot one or more times is important for our study.
+          </p>
 
-  <p>
-    You will complete <strong>four submissions</strong> per task, for a total of <strong>three tasks</strong>. After each submission, you will receive a Distinctiveness Score out of 100:
-  </p>
+          <p>
+            <strong>On the right panel,</strong> the "Sketchpad" allows you to draft and organize your response (please aim for <strong>300–600 characters</strong>. Your submission will be blocked otherwise). When you're ready, click <strong>"Copy to Submission Box"</strong> to move your response to the submission box, then click <strong>"Submit and Score."</strong>
+          </p>
 
-  <ul>
-    <li>A score closer to 0 means your response is <strong>very similar</strong> to a typical AI-generated response.</li>
-    <li>A score of 50 indicates your response is <strong>moderately similar</strong> to a typical AI-generated response.</li>
-    <li>A score closer to 100 means your response is <strong>very different</strong> from a typical AI-generated response.</li>
-  </ul>
+          <p>
+            You will complete <strong>one submission</strong> for this practice task. After you submit, you will receive a Distinctiveness Score out of 100:
+          </p>
 
-          
-  <p>
-    Your goal is to refine and develop your ideas so your submissions become increasingly distinct from the AI response. You will be able to see your response history and scores in a table after each submission, for a total of four submissions per task.
-  </p>
+          <ul>
+            <li>A score closer to 0 means your response is <strong>very similar</strong> to a typical AI-generated response.</li>
+            <li>A score of 50 indicates your response is <strong>moderately similar</strong> to a typical AI-generated response.</li>
+            <li>A score closer to 100 means your response is <strong>very different</strong> from a typical AI-generated response.</li>
+          </ul>
 
-  <p>
-    Once you finish one task, click the "Continue" button to move on to the next.
-  </p>        
+          <p>
+            Your goal is to get comfortable with the interface and see where your response history and score will appear.
+          </p>
 
-  <p>
-    <strong>Note:</strong> This practice is just for you to get used to what you'll be doing. The score doesn't matter for the practice -- it will be 50 no matter what you write!
-  </p>
-          
-  
+          <p>
+            <strong>Note:</strong> This practice is just for you to get used to what you'll be doing. The score doesn't matter for the practice -- it will be 50 no matter what you write!
+          </p>
         </section>
 
         <section class="grid-two">
           <div class="column">
             <h2>Chat with AI</h2>
-
-            <div class="panel">
-              <span class="badge">Chat</span>
-              <div id="chat-log" class="chat-log"></div>
-            </div>
 
             <div class="panel">
               <label class="badge" for="chat-input">Message</label>
@@ -85,6 +74,11 @@
             <div class="button-row">
               <button id="send-btn" class="btn btn-primary">Send</button>
               <button id="clear-btn" class="btn btn-secondary">Clear</button>
+            </div>
+
+            <div class="panel">
+              <span class="badge">Chat</span>
+              <div id="chat-log" class="chat-log"></div>
             </div>
           </div>
 
@@ -106,11 +100,25 @@
               ></textarea>
             </div>
 
+            <div class="panel">
+              <span class="badge">Character Count</span>
+              <p id="status-text" class="status-text">Character count: 0 / 600 (minimum 300)</p>
+            </div>
+
             <button id="submit-score-btn" class="btn btn-primary btn-full">Submit and Score</button>
 
-            <div class="panel">
-              <span class="badge">Status</span>
-              <p id="status-text" class="status-text">Character count: 0 / 600 (minimum 300)</p>
+            <div id="response-progress" class="response-progress-card">
+              <div class="response-progress-kicker">Current task progress</div>
+              <div class="response-progress-main">Task 1 of 1</div>
+              <div class="response-progress-sub">Completed submissions: 0 / 1</div>
+              <div class="response-progress-note">1 submission remaining</div>
+            </div>
+
+            <div id="task-banner" class="task-transition-banner hidden">
+              <div class="headline">Task complete</div>
+              <div class="message">
+                This practice task is locked. No more submissions are needed.
+              </div>
             </div>
 
             <div id="score-panel" class="panel score-panel hidden">

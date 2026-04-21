@@ -2,6 +2,7 @@ const startStudyBtn = document.getElementById('start-study-btn');
 const prolificIdInput = document.getElementById('prolific-id');
 const promptCard = document.getElementById('prompt-card');
 const participantId = document.getElementById('participant-id');
+const taskProgressMeta = document.getElementById('task-progress-meta');
 
 const chatLog = document.getElementById('chat-log');
 const chatInput = document.getElementById('chat-input');
@@ -17,14 +18,51 @@ const historyBody = document.getElementById('history-body');
 const scoreMarker = document.getElementById('score-marker');
 const scoreReadout = document.getElementById('score-readout');
 const scorePanel = document.getElementById('score-panel');
+const responseProgress = document.getElementById('response-progress');
+const taskBanner = document.getElementById('task-banner');
 
+const TOTAL_TASKS = 1;
+const SUBMISSIONS_PER_TASK = 1;
 const FIXED_SCORE = 50;
 
 const state = {
   messages: [],
   submissions: [],
-  started: false
+  started: false,
+  completed: false
 };
+
+function makeProgressText(completedSubmissions) {
+  return `Task 1 / ${TOTAL_TASKS} · Completed Submissions ${completedSubmissions} / ${SUBMISSIONS_PER_TASK}`;
+}
+
+function renderResponseProgress(completedSubmissions) {
+  const remaining = SUBMISSIONS_PER_TASK - completedSubmissions;
+  const noun = remaining === 1 ? 'submission' : 'submissions';
+  const note =
+    completedSubmissions >= SUBMISSIONS_PER_TASK
+      ? 'Practice task complete'
+      : `${remaining} ${noun} remaining`;
+
+  responseProgress.innerHTML = `
+    <div class="response-progress-kicker">Current task progress</div>
+    <div class="response-progress-main">Task 1 of ${TOTAL_TASKS}</div>
+    <div class="response-progress-sub">Completed submissions: ${completedSubmissions} / ${SUBMISSIONS_PER_TASK}</div>
+    <div class="response-progress-note">${note}</div>
+  `;
+}
+
+function setTaskLocked(locked) {
+  sketchpad.disabled = locked;
+  copyBtn.disabled = locked;
+  finalSubmission.disabled = locked;
+  chatInput.disabled = locked;
+  sendBtn.disabled = locked;
+  clearBtn.disabled = locked;
+  submitScoreBtn.disabled = locked;
+  submitScoreBtn.classList.toggle('hidden', locked);
+  taskBanner.classList.toggle('hidden', !locked);
+}
 
 function addMessage(role, text) {
   state.messages.push({ role, text });
@@ -163,14 +201,18 @@ startStudyBtn.addEventListener('click', () => {
   }
 
   state.started = true;
+  state.completed = false;
   participantId.textContent = pid;
   promptCard.classList.remove('hidden');
   startStudyBtn.disabled = true;
   prolificIdInput.disabled = true;
+  taskProgressMeta.textContent = makeProgressText(0);
+  renderResponseProgress(0);
+  setTaskLocked(false);
 });
 
 sendBtn.addEventListener('click', () => {
-  if (!state.started) return;
+  if (!state.started || state.completed) return;
   const text = chatInput.value.trim();
   if (!text) return;
 
@@ -190,11 +232,13 @@ chatInput.addEventListener('keydown', (event) => {
 });
 
 clearBtn.addEventListener('click', () => {
+  if (state.completed) return;
   state.messages = [];
   renderMessages();
 });
 
 copyBtn.addEventListener('click', () => {
+  if (state.completed) return;
   finalSubmission.value = sketchpad.value;
   updateStatus();
 });
@@ -202,7 +246,7 @@ copyBtn.addEventListener('click', () => {
 finalSubmission.addEventListener('input', () => updateStatus());
 
 submitScoreBtn.addEventListener('click', () => {
-  if (!state.started) return;
+  if (!state.started || state.completed) return;
 
   const text = finalSubmission.value.trim();
   const charCount = text.length;
@@ -218,15 +262,25 @@ submitScoreBtn.addEventListener('click', () => {
     score: FIXED_SCORE
   };
 
-  state.submissions.unshift(submission);
+  state.submissions = [submission];
   renderHistory();
   showScore();
+  state.completed = true;
+  taskProgressMeta.textContent = makeProgressText(state.submissions.length);
+  renderResponseProgress(state.submissions.length);
 
   updateStatus(
-    `Submitted #${submission.id}. Character count: ${charCount}. Score: ${FIXED_SCORE} (Moderately different).`
+    `Submitted #${submission.id}. Character count: ${charCount}. Score: ${FIXED_SCORE} (Moderately different). Practice task complete.`
   );
+
+  sketchpad.value = '';
+  finalSubmission.value = '';
+  setTaskLocked(true);
 });
 
 renderMessages();
 renderHistory();
+taskProgressMeta.textContent = makeProgressText(0);
+renderResponseProgress(0);
+setTaskLocked(false);
 updateStatus();
